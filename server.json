@@ -1,20 +1,20 @@
 {
   "transactions": [
     {
-      "id": 1,
-      "description": "Desenvolvimento de site",
+      "category": "Comida",
+      "description": "Lasanha",
+      "price": 450,
       "type": "income",
-      "category": "Venda",
-      "price": 14000,
-      "createdAt": "2022-07-29T19:36:44.505Z"
+      "createdAt": "Thu Jan 19 2023 10:41:37 GMT-0300 (Horário Padrão de Brasília)",
+      "id": 1
     },
     {
-      "id": 2,
-      "description": "Hambúrguer",
-      "type": "outcome",
-      "category": "Alimentação",
-      "price": 50,
-      "createdAt": "2022-07-29T19:30:44.505Z"
+      "category": "Serviço",
+      "description": "Fornecimento de suporte ao cliente",
+      "price": 13873,
+      "type": "income",
+      "createdAt": "Thu Jan 19 2023 11:04:24 GMT-0300 (Horário Padrão de Brasília)",
+      "id": 2
     }
   ]
 }

@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { TransactionsContext } from '../contexts/TransactionsContext'
 
+// This function calculates the input/output and total
 export function useSummary() {
   const { arrayList } = useContext(TransactionsContext)
 

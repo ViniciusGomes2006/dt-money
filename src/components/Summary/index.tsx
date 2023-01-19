@@ -1,8 +1,9 @@
 import { useSummary } from '../../hooks/useSummary'
-import { SummaryCard } from './card'
+import { SummaryCard } from './components/card'
 import * as Styled from './style'
 
 export function Summary() {
+  // This function calculates the input/output and total
   const summary = useSummary()
 
   return (

@@ -1,5 +1,5 @@
 import * as Styled from './style'
-import { NumberToCurreny } from '../../../utils/formatter'
+import { NumberToCurreny } from '../../../../utils/formatter'
 import { ArrowCircleDown, ArrowCircleUp, CurrencyDollar } from 'phosphor-react'
 
 interface card {

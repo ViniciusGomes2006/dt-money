@@ -4,31 +4,40 @@ import * as z from 'zod'
 import { ArrowCircleDown, ArrowCircleUp, X } from 'phosphor-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm, Controller } from 'react-hook-form'
-// import { useState } from 'react'
+import { TransactionsContext } from '../../contexts/TransactionsContext'
+import { useContext } from 'react'
 
+// This const validates the values filled in the form
 const newTransactionsFormSchema = z.object({
   description: z.string(),
   price: z.number(),
-  cartegory: z.string(),
+  category: z.string(),
   type: z.enum(['income', 'outcome']),
 })
 
+// This type infers the typing of values according to zod validation
 type NewTransactionsFormInputs = z.infer<typeof newTransactionsFormSchema>
 
 export function NewTransactionModal() {
-  // const [status, setStatus] = useState<boolean>(false)
+  const { CreateTransactions } = useContext(TransactionsContext)
 
+  // This const is being used to destructure the react hook form modules
   const {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { isSubmitting },
   } = useForm<NewTransactionsFormInputs>({
     resolver: zodResolver(newTransactionsFormSchema),
   })
 
+  // This function is calling another function in which it records the new
+  // transaction in the history and then executes a function to reset the form fields
   function handleSubmitTransactionForm(data: NewTransactionsFormInputs) {
-    console.log(data)
+    CreateTransactions(data)
+
+    reset()
   }
 
   return (
@@ -60,7 +69,7 @@ export function NewTransactionModal() {
           <input
             type="text"
             placeholder="Categoria"
-            {...register('cartegory')}
+            {...register('category')}
             required
           />
 

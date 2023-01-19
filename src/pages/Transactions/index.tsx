@@ -8,13 +8,17 @@ import { SearchForm } from './components/SearchForm'
 import * as Styled from './style'
 
 export function TransactionsPage() {
-  const [widthScreen, setWidthScreem] = useState(0)
   const { arrayList } = useContext(TransactionsContext)
 
+  // This useState store the client's screen size
+  const [widthScreen, setWidthScreem] = useState(0)
+
+  // This useEffect store the client screen size value in useState when first rendered
   useEffect(() => {
     setWidthScreem(window.screen.width)
   }, [])
 
+  // This function stores the Tag structure of a table in the desktop version
   const desktopTable = () => (
     <Styled.TransactionTable>
       <tbody>
@@ -36,6 +40,7 @@ export function TransactionsPage() {
     </Styled.TransactionTable>
   )
 
+  // This function stores the Tag structure of a table in the mobile version
   const mobileTable = () => (
     <Styled.TransactionTableMobile>
       {arrayList &&

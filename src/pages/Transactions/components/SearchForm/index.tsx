@@ -27,10 +27,12 @@ export function SearchForm({ type }: ButtonType) {
 
   const { getArrayList } = useContext(TransactionsContext)
 
+  // This function is executed when the search button is clicked, it calls the
+  // function to do the 'GET' method with the filter of what was typed in the field
   async function handleSubmitTransactions(data: SearchFormInput) {
     await new Promise((resolve) => setTimeout(resolve, 1500))
 
-    getArrayList(data.query)
+    getArrayList('transactions', data.query)
   }
 
   return (

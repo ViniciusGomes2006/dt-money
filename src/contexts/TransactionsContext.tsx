@@ -1,8 +1,9 @@
+import { AxiosResponse } from 'axios'
 import { createContext, ReactNode, useEffect, useState } from 'react'
-import { requestGet } from '../utils/Request'
+import { requestGet, requestPost } from '../utils/Request'
 
 export interface responseProps {
-  id: number
+  id?: number
   description: string
   type: 'outcome' | 'income'
   category: string
@@ -10,9 +11,17 @@ export interface responseProps {
   createdAt: string
 }
 
+export interface CreateNewTransactions {
+  description: string
+  price: number
+  category: string
+  type: 'income' | 'outcome'
+}
+
 interface TransactionContextType {
-  arrayList: responseProps[] | null
+  arrayList: responseProps[]
   getArrayList: (url: string, query?: string) => Promise<void>
+  CreateTransactions: (data: CreateNewTransactions) => Promise<void>
 }
 
 interface TransactionContextProps {
@@ -22,17 +31,43 @@ interface TransactionContextProps {
 export const TransactionsContext = createContext({} as TransactionContextType)
 
 export function TransactionProvider({ children }: TransactionContextProps) {
-  const [arrayList, setArrayList] = useState<responseProps[] | null>([])
+  // This useState stores a Transaction List to be displayed with map in transaction history
+  const [arrayList, setArrayList] = useState<responseProps[]>([])
 
-  async function getArrayList(query?: string) {
-    const response: responseProps[] | null = await requestGet(query)
+  // This function makes the 'GET' method in a url being possible to filter what will return
+  async function getArrayList(url: string, query?: string) {
+    const response: responseProps[] | undefined = await requestGet(url, query)
 
-    console.log(response)
+    if (!response) return
+
     setArrayList(response)
   }
+  // This function does the 'PUT' method of a new transaction in useState and returns does the set method in useState to update the information
+  async function CreateTransactions(data: CreateNewTransactions) {
+    const { category, description, price, type } = data
+    const createdAt = new Date().toString()
 
+    const newPost: responseProps = {
+      category,
+      description,
+      price,
+      type,
+      createdAt,
+    }
+
+    const newList: AxiosResponse<responseProps> | undefined = await requestPost(
+      'transactions',
+      newPost,
+    )
+
+    if (!newList) return
+
+    setArrayList([...arrayList, newList.data])
+  }
+
+  // This useEffect makes the first call of the 'GET' method on the arrayList to be rendered when the website is opened
   useEffect(() => {
-    getArrayList()
+    getArrayList('transactions')
   }, [])
 
   return (
@@ -40,6 +75,7 @@ export function TransactionProvider({ children }: TransactionContextProps) {
       value={{
         arrayList,
         getArrayList,
+        CreateTransactions,
       }}
     >
       {children}
