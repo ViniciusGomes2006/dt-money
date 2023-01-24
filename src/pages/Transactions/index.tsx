@@ -1,5 +1,6 @@
 import { CalendarBlank, TagSimple } from 'phosphor-react'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useContextSelector } from 'use-context-selector'
 import Header from '../../components/Header'
 import { Summary } from '../../components/Summary'
 import { TransactionsContext } from '../../contexts/TransactionsContext'
@@ -8,7 +9,9 @@ import { SearchForm } from './components/SearchForm'
 import * as Styled from './style'
 
 export function TransactionsPage() {
-  const { arrayList } = useContext(TransactionsContext)
+  const arrayList = useContextSelector(TransactionsContext, (data) => {
+    return data.arrayList
+  })
 
   // This useState store the client's screen size
   const [widthScreen, setWidthScreem] = useState(0)

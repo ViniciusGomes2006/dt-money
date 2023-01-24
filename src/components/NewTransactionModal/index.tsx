@@ -5,7 +5,7 @@ import { ArrowCircleDown, ArrowCircleUp, X } from 'phosphor-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm, Controller } from 'react-hook-form'
 import { TransactionsContext } from '../../contexts/TransactionsContext'
-import { useContext } from 'react'
+import { useContextSelector } from 'use-context-selector'
 
 // This const validates the values filled in the form
 const newTransactionsFormSchema = z.object({
@@ -19,7 +19,9 @@ const newTransactionsFormSchema = z.object({
 type NewTransactionsFormInputs = z.infer<typeof newTransactionsFormSchema>
 
 export function NewTransactionModal() {
-  const { CreateTransactions } = useContext(TransactionsContext)
+  const CreateTransactions = useContextSelector(TransactionsContext, (data) => {
+    return data.CreateTransactions
+  })
 
   // This const is being used to destructure the react hook form modules
   const {

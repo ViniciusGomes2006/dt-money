@@ -13,6 +13,10 @@ export const CardContainer = styled.div`
 
   &.green {
     background-color: ${({ theme }) => theme['green-700']};
+
+    span {
+      color: ${({ theme }) => theme['gray-100']};
+    }
   }
 
   header {

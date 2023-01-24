@@ -1,9 +1,11 @@
-import { useContext } from 'react'
+import { useContextSelector } from 'use-context-selector'
 import { TransactionsContext } from '../contexts/TransactionsContext'
 
 // This function calculates the input/output and total
 export function useSummary() {
-  const { arrayList } = useContext(TransactionsContext)
+  const arrayList = useContextSelector(TransactionsContext, (data) => {
+    return data.arrayList
+  })
 
   const summary = arrayList?.reduce(
     (value, transactions) => {

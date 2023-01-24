@@ -1,10 +1,10 @@
 import * as Styled from './style'
+import * as z from 'zod'
 import { MagnifyingGlass } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
-import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useContext } from 'react'
 import { TransactionsContext } from '../../../../contexts/TransactionsContext'
+import { useContextSelector } from 'use-context-selector'
 
 interface ButtonType {
   type: 'desktop' | 'mobile'
@@ -17,6 +17,10 @@ const searchFormSchema = z.object({
 type SearchFormInput = z.infer<typeof searchFormSchema>
 
 export function SearchForm({ type }: ButtonType) {
+  const getArrayList = useContextSelector(TransactionsContext, (data) => {
+    return data.getArrayList
+  })
+
   const {
     register,
     handleSubmit,
@@ -24,8 +28,6 @@ export function SearchForm({ type }: ButtonType) {
   } = useForm<SearchFormInput>({
     resolver: zodResolver(searchFormSchema),
   })
-
-  const { getArrayList } = useContext(TransactionsContext)
 
   // This function is executed when the search button is clicked, it calls the
   // function to do the 'GET' method with the filter of what was typed in the field
@@ -48,6 +50,7 @@ export function SearchForm({ type }: ButtonType) {
         type="submit"
         disabled={isSubmitting}
         className={type === 'mobile' ? 'mobileButton' : 'DesktopButton'}
+        title="Search"
       >
         <MagnifyingGlass size={20} weight="bold" />
         {type === 'desktop' ? 'Buscar' : ''}

@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios'
-import { createContext, ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState, useCallback } from 'react'
+import { createContext } from 'use-context-selector'
 import { requestGet, requestPost } from '../utils/Request'
 
 export interface responseProps {
@@ -35,40 +36,43 @@ export function TransactionProvider({ children }: TransactionContextProps) {
   const [arrayList, setArrayList] = useState<responseProps[]>([])
 
   // This function makes the 'GET' method in a url being possible to filter what will return
-  async function getArrayList(url: string, query?: string) {
+  const getArrayList = useCallback(async (url: string, query?: string) => {
     const response: responseProps[] | undefined = await requestGet(url, query)
 
     if (!response) return
 
     setArrayList(response)
-  }
+  }, [])
+
   // This function does the 'PUT' method of a new transaction in useState and returns does the set method in useState to update the information
-  async function CreateTransactions(data: CreateNewTransactions) {
-    const { category, description, price, type } = data
-    const createdAt = new Date().toString()
+  const CreateTransactions = useCallback(
+    async (data: CreateNewTransactions) => {
+      const { category, description, price, type } = data
+      const createdAt = new Date().toString()
 
-    const newPost: responseProps = {
-      category,
-      description,
-      price,
-      type,
-      createdAt,
-    }
+      const newPost: responseProps = {
+        category,
+        description,
+        price,
+        type,
+        createdAt,
+      }
 
-    const newList: AxiosResponse<responseProps> | undefined = await requestPost(
-      'transactions',
-      newPost,
-    )
+      const newList: AxiosResponse<responseProps> | undefined =
+        await requestPost('transactions', newPost)
 
-    if (!newList) return
+      if (!newList) return
 
-    setArrayList([...arrayList, newList.data])
-  }
+      setArrayList([...arrayList, newList.data])
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  )
 
   // This useEffect makes the first call of the 'GET' method on the arrayList to be rendered when the website is opened
   useEffect(() => {
     getArrayList('transactions')
-  }, [])
+  }, [getArrayList])
 
   return (
     <TransactionsContext.Provider
