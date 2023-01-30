@@ -4,16 +4,16 @@
       "category": "Comida",
       "description": "Lasanha",
       "price": 450,
-      "type": "income",
+      "type": "outcome",
       "createdAt": "Thu Jan 19 2023 10:41:37 GMT-0300 (Horário Padrão de Brasília)",
       "id": 1
     },
     {
       "category": "Serviço",
       "description": "Fornecimento de suporte ao cliente",
-      "price": 13873,
+      "price": 10000,
       "type": "income",
-      "createdAt": "Thu Jan 19 2023 11:04:24 GMT-0300 (Horário Padrão de Brasília)",
+      "createdAt": "Mon Jan 30 2023 17:09:20 GMT-0300 (Horário Padrão de Brasília)",
       "id": 2
     }
   ]

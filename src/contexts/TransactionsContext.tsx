@@ -23,6 +23,8 @@ interface TransactionContextType {
   arrayList: responseProps[]
   getArrayList: (url: string, query?: string) => Promise<void>
   CreateTransactions: (data: CreateNewTransactions) => Promise<void>
+  focus: true | false
+  UpdateModalFocus: (data: boolean) => void
 }
 
 interface TransactionContextProps {
@@ -32,6 +34,7 @@ interface TransactionContextProps {
 export const TransactionsContext = createContext({} as TransactionContextType)
 
 export function TransactionProvider({ children }: TransactionContextProps) {
+  const [focus, setFocus] = useState(false)
   // This useState stores a Transaction List to be displayed with map in transaction history
   const [arrayList, setArrayList] = useState<responseProps[]>([])
 
@@ -63,11 +66,14 @@ export function TransactionProvider({ children }: TransactionContextProps) {
 
       if (!newList) return
 
-      setArrayList([...arrayList, newList.data])
+      setArrayList((state) => [newList.data, ...state])
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
+
+  const UpdateModalFocus = useCallback((data: boolean) => {
+    setFocus(data)
+  }, [])
 
   // This useEffect makes the first call of the 'GET' method on the arrayList to be rendered when the website is opened
   useEffect(() => {
@@ -80,6 +86,8 @@ export function TransactionProvider({ children }: TransactionContextProps) {
         arrayList,
         getArrayList,
         CreateTransactions,
+        focus,
+        UpdateModalFocus,
       }}
     >
       {children}

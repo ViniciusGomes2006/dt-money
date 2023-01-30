@@ -9,18 +9,27 @@ import { useContextSelector } from 'use-context-selector'
 
 // This const validates the values filled in the form
 const newTransactionsFormSchema = z.object({
-  description: z.string(),
-  price: z.number(),
-  category: z.string(),
-  type: z.enum(['income', 'outcome']),
+  description: z
+    .string()
+    .min(8, { message: 'O minimo de caracter é 8' })
+    .max(64, { message: 'O máximo de caracter é 64' }),
+  price: z.number().min(1, { message: 'Este campo é obrigatório' }),
+  category: z
+    .string()
+    .min(4, { message: 'O minimo de caracter é 4' })
+    .max(16, { message: 'O máximo de caracter é 16' }),
+  type: z.enum(['income', 'outcome'], {
+    required_error: 'Selecione uma opção',
+  }),
 })
 
 // This type infers the typing of values according to zod validation
 type NewTransactionsFormInputs = z.infer<typeof newTransactionsFormSchema>
 
 export function NewTransactionModal() {
-  const CreateTransactions = useContextSelector(TransactionsContext, (data) => {
-    return data.CreateTransactions
+  const context = useContextSelector(TransactionsContext, (data) => {
+    const { CreateTransactions, UpdateModalFocus } = data
+    return { CreateTransactions, UpdateModalFocus }
   })
 
   // This const is being used to destructure the react hook form modules
@@ -29,7 +38,7 @@ export function NewTransactionModal() {
     handleSubmit,
     control,
     reset,
-    formState: { isSubmitting },
+    formState: { errors, isSubmitting },
   } = useForm<NewTransactionsFormInputs>({
     resolver: zodResolver(newTransactionsFormSchema),
   })
@@ -37,7 +46,8 @@ export function NewTransactionModal() {
   // This function is calling another function in which it records the new
   // transaction in the history and then executes a function to reset the form fields
   function handleSubmitTransactionForm(data: NewTransactionsFormInputs) {
-    CreateTransactions(data)
+    context.CreateTransactions(data)
+    context.UpdateModalFocus(false)
 
     reset()
   }
@@ -62,18 +72,31 @@ export function NewTransactionModal() {
             {...register('description')}
             required
           />
+          {errors.description && (
+            <Styled.errorMessage>
+              {errors.description?.message}
+            </Styled.errorMessage>
+          )}
           <input
             type="number"
             placeholder="Preço"
             {...register('price', { valueAsNumber: true })}
             required
           />
+          {errors.price && (
+            <Styled.errorMessage>{errors.price?.message}</Styled.errorMessage>
+          )}
           <input
             type="text"
             placeholder="Categoria"
             {...register('category')}
             required
           />
+          {errors.category && (
+            <Styled.errorMessage>
+              {errors.category?.message}
+            </Styled.errorMessage>
+          )}
 
           <Controller
             control={control}
@@ -99,6 +122,9 @@ export function NewTransactionModal() {
               )
             }}
           />
+          {errors.type && (
+            <Styled.errorMessage>{errors.type?.message}</Styled.errorMessage>
+          )}
 
           <button type="submit" disabled={isSubmitting}>
             Cadastrar

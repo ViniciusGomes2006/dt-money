@@ -121,3 +121,8 @@ export const TransactionTypeButton = styled(RadioGroup.Item)<TypeActionProps>`
     }
   }
 `
+
+export const errorMessage = styled.span`
+  color: ${({ theme }) => theme['red-300']};
+  font-size: 0.875rem;
+`

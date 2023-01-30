@@ -15,6 +15,7 @@ export async function requestGet(url: string, query?: string) {
         q: query,
       },
     })
+    console.log(data)
     return data
   } catch (error) {
     console.error(error)
